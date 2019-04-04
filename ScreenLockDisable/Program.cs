@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace ScreenLockDisable
 {
@@ -52,30 +53,35 @@ namespace ScreenLockDisable
         {
             // launch console window minimized
             ShowWindow(Process.GetCurrentProcess().MainWindowHandle, SW_SHOWMINIMIZED);
+            Console.Title = ProgramHeader;
             Console.CursorVisible = false;
+
+            var task = ScreenLockDisableAsync();
 
             while (true)
             {
-                ScreenLockDisable();
-
                 Console.Clear();
-                Console.WriteLine(ProgramHeader);
                 Console.WriteLine("Press 'Q' key to exit");
 
                 if (Console.ReadKey(true).Key == ConsoleKey.Q) { break; }
-
             }
         }
 
-        private static void ScreenLockDisable()
+        private static async Task ScreenLockDisableAsync()
         {
-            // away mode for Windows >= Vista
-            uint res = SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED | ES_AWAYMODE_REQUIRED);
-
-            if (res == 0)
+            // execute forever (this task/thread should always be alive)
+            while (true)
             {
-                // Windows < Vista, forget away mode
-                SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
+                // away mode for Windows >= Vista
+                uint res = SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED | ES_AWAYMODE_REQUIRED);
+
+                if (res == 0)
+                {
+                    // Windows < Vista, forget away mode
+                    SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
+                }
+
+                await Task.Delay(60000);
             }
         }
     }
