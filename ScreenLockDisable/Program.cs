@@ -52,6 +52,7 @@ namespace ScreenLockDisable
         {
             // launch console window minimized
             ShowWindow(Process.GetCurrentProcess().MainWindowHandle, SW_SHOWMINIMIZED);
+            Console.CursorVisible = false;
 
             while (true)
             {
