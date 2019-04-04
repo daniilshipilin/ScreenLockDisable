@@ -1,6 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
-using Topshelf;
+using System.Runtime.InteropServices;
 
 namespace ScreenLockDisable
 {
@@ -33,33 +34,48 @@ namespace ScreenLockDisable
 
         #endregion
 
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, uint nCmdShow);
+
+        const uint SW_SHOWMINIMIZED = 0x00000002;
+
+        [DllImport("kernel32.dll")]
+        static extern uint SetThreadExecutionState(uint esFlags);
+
+        const uint ES_SYSTEM_REQUIRED = 0x00000001;
+        const uint ES_DISPLAY_REQUIRED = 0x00000002;
+        //const uint ES_USER_PRESENT    = 0x00000004, // legacy flag
+        const uint ES_AWAYMODE_REQUIRED = 0x00000040;
+        const uint ES_CONTINUOUS = 0x80000000;
+
         static void Main(string[] args)
         {
-            var host = HostFactory.New(x =>
+            // launch console window minimized
+            ShowWindow(Process.GetCurrentProcess().MainWindowHandle, SW_SHOWMINIMIZED);
+
+            while (true)
             {
-                x.Service<ScreenLocker>(sc =>
-                {
-                    sc.ConstructUsing(() => new ScreenLocker());
+                ScreenLockDisable();
 
-                    // the start and stop methods for the service
-                    sc.WhenStarted((s, hostControl) => s.Start(hostControl));
-                    sc.WhenStopped((s, hostControl) => s.Stop(hostControl));
+                Console.Clear();
+                Console.WriteLine(ProgramHeader);
+                Console.WriteLine("Press 'Q' key to exit");
 
-                    // optional, when shutdown is supported
-                    sc.WhenShutdown((s, hostControl) => s.Shutdown(hostControl));
-                });
+                if (Console.ReadKey(true).Key == ConsoleKey.Q) { break; }
 
-                x.RunAsLocalSystem();
-                x.SetServiceName("ScreenLockDisable_Service");
-                x.SetDisplayName("Screen Lock Disable");
-                x.SetDescription("Screen Lock Disable service application.");
-                x.EnableShutdown();
-                x.StartAutomatically();
-            });
+            }
+        }
 
-            var serviceExitCode = host.Run();
+        private static void ScreenLockDisable()
+        {
+            // away mode for Windows >= Vista
+            uint res = SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED | ES_AWAYMODE_REQUIRED);
 
-            Environment.ExitCode = (int)serviceExitCode;
+            if (res == 0)
+            {
+                // Windows < Vista, forget away mode
+                SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
+            }
         }
     }
 }
