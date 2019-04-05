@@ -55,16 +55,11 @@ namespace ScreenLockDisable
             ShowWindow(Process.GetCurrentProcess().MainWindowHandle, SW_SHOWMINIMIZED);
             Console.Title = ProgramHeader;
             Console.CursorVisible = false;
+            Console.WriteLine("Press 'Q' key to exit");
 
             var task = ScreenLockDisableAsync();
 
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine("Press 'Q' key to exit");
-
-                if (Console.ReadKey(true).Key == ConsoleKey.Q) { break; }
-            }
+            while (Console.ReadKey(true).Key != ConsoleKey.Q) { continue; }
         }
 
         private static async Task ScreenLockDisableAsync()
