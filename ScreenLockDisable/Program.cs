@@ -57,23 +57,34 @@ namespace ScreenLockDisable
             ShowWindow(Process.GetCurrentProcess().MainWindowHandle, SW_SHOWMINIMIZED);
             Console.Title = ProgramHeader;
             Console.CursorVisible = false;
-            Console.WriteLine("Press 'Q' key to exit");
+            Console.WriteLine("'Q': key to exit");
+            Console.WriteLine("'D': key to disable screen lock (default)");
+            Console.WriteLine("'R': key to re-enable (reset) screen lock");
 
             ScreenLockDisable();
 
-            while (Console.ReadKey(true).Key != ConsoleKey.Q) { continue; }
+            while (true)
+            {
+                var key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.Q) { break; }
+                else if (key == ConsoleKey.R) { ScreenLockReset(); }
+                else if (key == ConsoleKey.D) { ScreenLockDisable(); }
+            }
         }
 
         private static void ScreenLockDisable()
         {
             // To disable it until we state otherwise, we use the ES_DISPLAY_REQUIRED and ES_CONTINUOUS flags.
             SetThreadExecutionState(EXECUTION_STATE.ES_DISPLAY_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS);
+            Console.WriteLine("Screen lock disabled");
         }
 
         private static void ScreenLockReset()
         {
             // Re-enabling the screensaver requires that we clear the ES_DISPLAY_REQUIRED state flag. We can do this by passing the ES_CONTINUOUS flag alone
             SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
+            Console.WriteLine("Screen lock reset");
         }
     }
 }
