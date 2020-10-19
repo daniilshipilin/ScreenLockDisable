@@ -1,3 +1,7 @@
+![lock.ico](./ScreenLockDisable/Images/lock.ico)
+
 # ScreenLockDisable
 
-ScreenLockDisable project.
+### Author: Daniil Shipilin (daniil.shipilin@gmail.com)
+
+Screen Lock Disable application.

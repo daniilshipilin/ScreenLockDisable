@@ -9,8 +9,6 @@ namespace ScreenLockDisable
     {
         #region Program configuration
 
-        const string VERSION_INFO = "";
-
 #if DEBUG
         const string BUILD_CONFIGURATION = " [Debug]";
 #else
@@ -24,7 +22,7 @@ namespace ScreenLockDisable
         private static Version Ver { get; } = new AssemblyName(Assembly.GetExecutingAssembly().FullName).Version;
         public static string ProgramVersion { get; } = $"{Ver.Major}.{Ver.Minor}.{Ver.Build}";
         public static string ProgramName { get; } = Assembly.GetExecutingAssembly().GetName().Name;
-        public static string ProgramHeader { get; } = $"{ProgramName} v{ProgramVersion}{VERSION_INFO}{BUILD_CONFIGURATION}";
+        public static string ProgramHeader { get; } = $"{ProgramName} v{ProgramVersion}{BUILD_CONFIGURATION}";
         public static string ProgramAuthor { get; } = "Author: Daniil Shipilin";
 
         #endregion
