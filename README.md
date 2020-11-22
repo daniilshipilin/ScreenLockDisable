@@ -2,6 +2,6 @@
 
 # ScreenLockDisable
 
-### Author: Daniil Shipilin (daniil.shipilin@gmail.com)
+### Author: Daniil Shipilin
 
 Screen Lock Disable application.
