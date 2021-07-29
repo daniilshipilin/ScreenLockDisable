@@ -4,4 +4,4 @@
 
 ### Author: Daniil Shipilin
 
-Screen Lock Disable application.
+Windows Screen Lock Disable application.
