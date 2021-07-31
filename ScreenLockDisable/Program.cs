@@ -1,7 +1,6 @@
 namespace ScreenLockDisable
 {
     using System;
-    using System.Diagnostics;
     using System.Reflection;
     using System.Runtime.InteropServices;
 
@@ -20,11 +19,6 @@ namespace ScreenLockDisable
         public static string ProgramName { get; } = Assembly.GetExecutingAssembly().GetName().Name;
 
         public static string ProgramHeader { get; } = $"{ProgramName} v{ProgramVersion}{BUILD_CONFIGURATION}";
-
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, uint nCmdShow);
-
-        const uint SW_SHOWMINIMIZED = 0x00000002;
 
         [DllImport("kernel32.dll")]
         static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
@@ -47,11 +41,6 @@ namespace ScreenLockDisable
                     Console.WriteLine(ProgramHeader);
 
                     return;
-                }
-                else if (args[0].Equals("-minimized"))
-                {
-                    // launch console window minimized
-                    ShowWindow(Process.GetCurrentProcess().MainWindowHandle, SW_SHOWMINIMIZED);
                 }
             }
 
