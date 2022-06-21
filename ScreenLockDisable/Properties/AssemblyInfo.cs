@@ -3,5 +3,4 @@ using System.Reflection;
 [assembly: AssemblyTitle("ScreenLockDisable")]
 [assembly: AssemblyDescription("Windows screen lock disable application.")]
 [assembly: AssemblyProduct("ScreenLockDisable")]
-[assembly: AssemblyCopyright("Daniil Shipilin")]
 [assembly: AssemblyVersion("0.7.0")]

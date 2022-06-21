@@ -2,6 +2,4 @@
 
 # ScreenLockDisable
 
-### Author: Daniil Shipilin
-
 Windows Screen Lock Disable application.
