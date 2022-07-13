@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<Version>0.8.0</Version>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net6.0</TargetFramework>
 		<AssemblyName>ScreenLockDisable</AssemblyName>
 		<RootNamespace>ScreenLockDisable</RootNamespace>
-		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
 		<ApplicationIcon>Images\lock.ico</ApplicationIcon>
 	</PropertyGroup>
 
