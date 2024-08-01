@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Version>0.8.0</Version>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<AssemblyName>ScreenLockDisable</AssemblyName>
 		<RootNamespace>ScreenLockDisable</RootNamespace>
 		<Nullable>enable</Nullable>
