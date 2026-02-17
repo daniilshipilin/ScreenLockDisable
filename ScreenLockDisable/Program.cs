@@ -3,8 +3,9 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
-internal class Program
+public class Program
 {
 #if DEBUG
     private const string BUILD_CONFIGURATION = " [Debug]";
@@ -21,7 +22,7 @@ internal class Program
     private static string ProgramHeader { get; } = $"{ProgramName} v{ProgramVersion}{BUILD_CONFIGURATION}";
 
     [DllImport("kernel32.dll")]
-    static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
+    private static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
 
     [Flags]
     public enum EXECUTION_STATE : uint
@@ -32,25 +33,24 @@ internal class Program
         ES_SYSTEM_REQUIRED = 0x00000001  // This flag indicates that the system is active. When passed alone, the system idle timer is reset to zero once. The timer restarts and the machine will sleep when it expires.
     }
 
-    internal static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         if (args.Length > 0)
         {
             if (args[0].Equals("/?"))
             {
-                Console.WriteLine(ProgramHeader);
-
+                await Console.Out.WriteLineAsync(ProgramHeader);
                 return;
             }
         }
 
         Console.Title = ProgramHeader;
         Console.CursorVisible = false;
-        Console.WriteLine("'Q': key to exit");
-        Console.WriteLine("'D': key to disable screen lock");
-        Console.WriteLine("'E': key to enable screen lock");
+        await Console.Out.WriteLineAsync("'Q': key to exit");
+        await Console.Out.WriteLineAsync("'D': key to disable screen lock");
+        await Console.Out.WriteLineAsync("'E': key to enable screen lock");
 
-        ScreenLockDisable();
+        await ScreenLockDisableAsync();
 
         while (true)
         {
@@ -60,31 +60,31 @@ internal class Program
                     return;
 
                 case ConsoleKey.E:
-                    ScreenLockEnable();
+                    await ScreenLockEnableAsync();
                     break;
 
                 case ConsoleKey.D:
-                    ScreenLockDisable();
+                    await ScreenLockDisableAsync();
                     break;
 
                 default:
-                    Console.WriteLine("Unknown key press detected");
+                    await Console.Out.WriteLineAsync("Unknown key press detected");
                     break;
             }
         }
     }
 
-    private static void ScreenLockDisable()
+    private static async Task ScreenLockDisableAsync()
     {
         // To disable it until we state otherwise, we use the ES_DISPLAY_REQUIRED and ES_CONTINUOUS flags.
         SetThreadExecutionState(EXECUTION_STATE.ES_DISPLAY_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS);
-        Console.WriteLine("Screen lock disabled");
+        await Console.Out.WriteLineAsync("Screen lock disabled");
     }
 
-    private static void ScreenLockEnable()
+    private static async Task ScreenLockEnableAsync()
     {
         // Re-enabling the screensaver requires that we clear the ES_DISPLAY_REQUIRED state flag. We can do this by passing the ES_CONTINUOUS flag alone
         SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
-        Console.WriteLine("Screen lock enabled");
+        await Console.Out.WriteLineAsync("Screen lock enabled");
     }
 }
