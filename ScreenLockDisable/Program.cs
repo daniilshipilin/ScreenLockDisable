@@ -1,26 +1,11 @@
 ﻿namespace ScreenLockDisable;
 
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 public class Program
 {
-#if DEBUG
-    private const string BUILD_CONFIGURATION = " [Debug]";
-#else
-    private const string BUILD_CONFIGURATION = "";
-#endif
-
-    private static Version Ver { get; } = new AssemblyName(Assembly.GetExecutingAssembly().FullName!).Version!;
-
-    private static string ProgramVersion { get; } = $"{Ver.Major}.{Ver.Minor}.{Ver.Build}";
-
-    private static string ProgramName { get; } = Assembly.GetExecutingAssembly().GetName().Name!;
-
-    private static string ProgramHeader { get; } = $"{ProgramName} v{ProgramVersion}{BUILD_CONFIGURATION}";
-
     [DllImport("kernel32.dll")]
     private static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
 
@@ -39,12 +24,12 @@ public class Program
         {
             if (args[0].Equals("/?"))
             {
-                await Console.Out.WriteLineAsync(ProgramHeader);
+                await Console.Out.WriteLineAsync(ApplicationInfo.AppHeader);
                 return;
             }
         }
 
-        Console.Title = ProgramHeader;
+        Console.Title = ApplicationInfo.AppHeader;
         Console.CursorVisible = false;
         await Console.Out.WriteLineAsync("'Q': key to exit");
         await Console.Out.WriteLineAsync("'D': key to disable screen lock");
